@@ -1,0 +1,47 @@
+.TH PYRPUB 1 "29 Mar 2001" "The Pyrite Project" "Pyrite Publisher"
+.SH NAME
+pyrpub \- convert content to Palm-compatible format
+.SH SYNOPSIS
+.B dtk
+[
+.BI -P " plugin-names"
+] [
+.B -h | --help
+] [
+.B -l | --list-plugins
+] [
+.I OPTIONS ...
+]
+.I FILES ...
+.SH DESCRIPTION
+This manual pages documents
+.B pyrpub,
+the command-line user interface to Pyrite Publisher.  Pyrite Publisher
+is a modular system for converting various kinds of content into forms
+which are usable on Palm Computing(R) platform handhelds.  (Currently
+only textual document conversion is supported, targeting the Doc
+format which is the de facto standard for large text documents on the
+Palm platform.)
+.SH OPTIONS
+The options described in this section are part of the Pyrite Publisher
+core, and are always available.  There may be additional options
+available, depending on what plugins are installed
+.SS BASIC OPTIONS
+.TP
+.B \-h, \-\-help
+Show a summary of options, including those that apply to all installed
+plugins.
+.TP
+.B \-l, \-\-list-plugins
+List all installed plugins.
+.TP
+.B \-P NAME[,NAME...]
+Request that a particular plugin be used, if it is possible to do so.
+(If it is not possible to convert the input using a sequence of
+plugins that includes the ones specified in this option, an error will
+be reported.)
+.TP
+.B \-\-list-properties
+List the names of the properties of all installed plugins.
+.SH AUTHOR
+Pyrite Publisher was written by Rob Tillotson <rob@pyrite.org>.

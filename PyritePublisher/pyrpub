@@ -1,0 +1,27 @@
+#!/usr/bin/python
+# -*-Python-*-
+
+import sys
+
+try:
+    import dtkmain
+except:
+    from PyritePublisher import dtkmain
+
+try:
+    import gui_wxwin
+except:
+    try:
+        from PyritePublisher import gui_wxwin
+    except:
+        pass
+
+if len(sys.argv) == 1:
+    try:
+        app = gui_wxwin.PPApp(0)
+        app.MainLoop()
+        sys.exit()
+    except:
+        sys.exit()
+        
+dtkmain.PPCLI()(sys.argv)

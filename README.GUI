@@ -1,0 +1,60 @@
+
+The Pyrite Publisher graphical interface uses wxPython; to use it you
+will need wxWindows and wxPython installed.  (Pyrite Publisher will
+work just fine without wxPython, but you'll have to use the command
+line, which may not even be possible under Windows.)  You can get
+wxWindows at http://www.wxwindows.org/ if you don't have it already.
+
+If you are on Windows and you aren't familiar with using and
+developing in Python, it is probably best to wait until a turnkey
+installation package is ready.
+
+There is currently no direct way to start the GUI.  The main program
+is in the "gui_wxwin.py" file in the Pyrite Publisher package
+directory; you can start it by double-clicking on it in Windows (once
+Pyrite Publisher and wxPython have been installed) or in Unix run it
+like this:
+
+    python /usr/local/lib/python2.1/site-packages/PyritePublisher/gui_wxwin.py
+
+The main window should be pretty straightforward: put the filename of
+the file you want to convert in the topmost text box (or use the
+"Choose" button next to it to browse) and click on "Convert".  If you
+leave the "output file" box empty the converted file will be placed in
+the current directory; otherwise, you can enter a filename here.
+
+The "advanced options" are intended to be a substitute for the most
+commonly used command-line options:
+
+The "queue for installation" checkbox is the equivalent of the -i
+option on the command line; it tries to install the converted data
+using the most appropriate method it knows about, (usually) instead of
+making a converted file.  (On Windows this doesn't work at all yet.)
+
+The "Copy Docs directly" checkbox is used for converting between
+document formats; it enables the "CopyDoc" plugin so that if you give
+a .pdb file as input it will be processed in raw form.  This is only
+useful if you select zTXT output and convert a Doc, or vice versa.
+
+The "Doc Output" picker forces the use of a particular doc-output
+plugin.  It will list all plugins which handle e-text output; choose
+<Automatic> to let Pyrite Publisher choose.
+
+Likewise, the "Doc Format" picker forces the use of a particular
+doc-assembler plugin.  It will list all plugins which process markup
+for e-texts.
+
+Similarly, the "Text Parser" picker forces the use of a particular
+parser for plain text files.  It will list all plugins that handle the
+text/plain MIME type.
+
+Choosing any option that forces the use of a plugin is exactly like
+using the "-P" option on the command line, which means that if you
+have selected options that don't make sense for the file you are
+trying to convert, an error will occur.
+
+Also of note: the File menu has a "Plugins" option which shows a
+somewhat ugly information panel about each installed plugin.  In the
+future there will also be a way to edit properties from there.
+(Unfortunately the version of wxPython I am using has neither the
+wxProperty* controls nor wxGrid...)

@@ -1,0 +1,989 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Pyrite Publisher</title>
+<META NAME="description" CONTENT="Pyrite Publisher">
+<META NAME="keywords" CONTENT="pyrite-publisher">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="STYLESHEET" href="pyrite-publisher.css">
+</head>
+<body>
+<DIV CLASS="navigation"><table align="center" width="100%" cellpadding="0" cellspacing="2">
+<tr>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+<td><A HREF="http://www.pyrite.org/"><img src="../icons/up.gif" border="0" height="32"
+  alt="Up One Level" width="32"></A></td>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+<td align="center" width="100%">Pyrite Publisher</td>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+</tr></table>
+<b class="navlabel">Up:</b> <a class="sectref" HREF="http://www.pyrite.org/">The Pyrite Project</A>
+<br><hr></DIV>
+<!--End of Navigation Panel-->
+
+<div class="titlepage">
+<center>
+<h1>Pyrite Publisher</h1>
+<p><b><font size='+2'>Rob Tillotson</font></b></p>
+<p><span class="email">rob@pyrite.org</span></p>
+<p>
+</center>
+</div>
+<BR>
+<BR><H2><A NAME="SECTION000100000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL CLASS="TofC">
+<LI><A NAME="tex2html3"
+  HREF="pyrite-publisher.html">1 Introduction</A>
+<LI><A NAME="tex2html4"
+  HREF="#SECTION000300000000000000000">2 Using Pyrite Publisher</A>
+<LI><A NAME="tex2html5"
+  HREF="#SECTION000400000000000000000">3 Plugins and Chains</A>
+<UL>
+<LI><A NAME="tex2html6"
+  HREF="#SECTION000410000000000000000">3.1 E-Book Conversion Chains</A>
+<LI><A NAME="tex2html7"
+  HREF="#SECTION000420000000000000000">3.2 Advanced Plugin Management: Protocols and Priorities</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html8"
+  HREF="#SECTION000500000000000000000">4 Configuration and Options</A>
+<LI><A NAME="tex2html9"
+  HREF="#SECTION000600000000000000000">5 Standard Plugins</A>
+<UL>
+<LI><A NAME="tex2html10"
+  HREF="#SECTION000610000000000000000">5.1 Protocols and Priorities</A>
+<LI><A NAME="tex2html11"
+  HREF="#SECTION000620000000000000000">5.2 <tt class="class">URLStream</tt> - Input from a file or URL</A>
+<LI><A NAME="tex2html12"
+  HREF="#SECTION000630000000000000000">5.3 <tt class="class">PDBInput</tt> - Input from a Doc or zTXT database</A>
+<LI><A NAME="tex2html13"
+  HREF="#SECTION000640000000000000000">5.4 <tt class="class">RawText</tt> - Raw text parser</A>
+<LI><A NAME="tex2html14"
+  HREF="#SECTION000650000000000000000">5.5 <tt class="class">Text</tt> - Text parser</A>
+<LI><A NAME="tex2html15"
+  HREF="#SECTION000660000000000000000">5.6 <tt class="class">TaggedText</tt> - Tagged text parser</A>
+<LI><A NAME="tex2html16"
+  HREF="#SECTION000670000000000000000">5.7 <tt class="class">HTML</tt> - HTML parser</A>
+<LI><A NAME="tex2html17"
+  HREF="#SECTION000680000000000000000">5.8 <tt class="class">BasicDoc</tt> - Standard e-book assembler</A>
+<LI><A NAME="tex2html18"
+  HREF="#SECTION000690000000000000000">5.9 <tt class="class">TealDoc</tt> - TealDoc-enhanced e-book assembler</A>
+<LI><A NAME="tex2html19"
+  HREF="#SECTION0006100000000000000000">5.10 <tt class="class">RichReader</tt> - RichReader-enhanced e-book assembler</A>
+<LI><A NAME="tex2html20"
+  HREF="#SECTION0006110000000000000000">5.11 <tt class="class">DocOutput</tt> - Output to a Doc-format database</A>
+<LI><A NAME="tex2html21"
+  HREF="#SECTION0006120000000000000000">5.12 <tt class="class">zTXT</tt> - Output to a zTXT-format database</A>
+<LI><A NAME="tex2html22"
+  HREF="#SECTION0006130000000000000000">5.13 <tt class="class">TextOutput</tt> - Output to a text file or the console</A>
+<LI><A NAME="tex2html23"
+  HREF="#SECTION0006140000000000000000">5.14 <tt class="class">CopyDoc</tt> - Copy from one e-book database format to
+  another</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html24"
+  HREF="#SECTION000700000000000000000">6 Plugin Developers Reference</A>
+<LI><A NAME="tex2html25"
+  HREF="#SECTION000800000000000000000">7 Protocols Reference</A>
+<LI><A NAME="tex2html26"
+  HREF="#SECTION000900000000000000000">8 Low-Level Modules Reference</A>
+<LI><A NAME="tex2html27"
+  HREF="#SECTION0001000000000000000000">About this document ...</A>
+</UL>
+<!--End of Table of Contents-->
+<P>
+
+<H1><A NAME="SECTION000200000000000000000">
+1 Introduction</A>
+</H1>
+
+<P>
+The Doc format is a simple text database format used by e-book readers
+on the Palm Computing Platform.  Although there are a few proprietary
+e-book formats still in use, the Doc format is by far the most widely
+supported way to store long texts on the Palm platform, with over a
+dozen readers and editors supporting it.
+
+<P>
+In its simplest form, a Doc database is just compressed text, in a
+form designed for efficient storage and navigation on the palmtop.
+However, many newer readers support some form of "rich text" markup,
+either a subset of HTML or their own unique tagging schemes.
+
+<P>
+While all of these augmented readers can be an improvement over a
+traditional text-only reader, the proliferation of markup formats
+means that every one of them needs to have its own conversion program
+(which, often, is not available for any OS except Windows) to create
+Doc databases with the proper markup.  It also means that the same Doc
+database might or might not be readable on a different reader,
+depending on what sort of markup is in it.  Pyrite Publisher is
+intended to address these problems (to some extent) by providing a
+conversion framework with pluggable modules.
+
+<P>
+Pyrite Publisher separates the interpretation of its input from the
+rendering of that input into a specific markup language.  During
+conversion, an input plugin is used to convert the input (usually
+text, HTML, or something similar) to a sequence of formatting events
+which are independent of any particular markup language; an output
+plugin converts those into the markup used by a particular Doc reader
+and creates the resulting Doc database.
+
+<P>
+
+<H1><A NAME="SECTION000300000000000000000">
+2 Using Pyrite Publisher</A>
+</H1>
+
+<P>
+Pyrite Publisher is a command-line program.  A graphical user
+interface may be added in the future, but at present it can be run
+from the command line only.  Normally, Pyrite Publisher's command line
+interface is called <b class="program">pyrpub</b>, so the most basic way to use it
+is something like this:
+
+<P>
+<dl><dd><pre class="verbatim">
+% pyrpub foo.txt
+</pre></dl>
+
+<P>
+Pyrite Publisher will try to convert the named file in the best way it
+knows how, based on the type of data in the file.  For example, if you
+give Pyrite Publisher a HTML file as input, it will automatically use
+its HTML parser.  The result of the conversion will be a file named
+<span class="file">foo.pdb</span> which you can install on your handheld.
+
+<P>
+
+<H1><A NAME="SECTION000400000000000000000">
+3 Plugins and Chains</A>
+</H1>
+
+<P>
+Most of Pyrite Publisher is built out of a set of <i>plugins</i>,
+which are assembled into <i>chains</i> to convert an input file to a
+Palm database.  Each plugin has an input and an output; at the
+beginning of the chain the first plugin's input is the file you
+specify on the command line, and at the end of the chain the last
+plugin's output is the database you install on your handheld.  In
+between, each plugin analyzes and modifies the data before passing it
+to the next plugin in the chain.
+
+<P>
+When you run Pyrite Publisher, it tries to construct a chain of
+plugins that can successfully convert the input file to a database.
+The plugins supplied with Pyrite Publisher are designed to be
+interchangeable so you can get different results simply by using
+different plugins.
+
+<P>
+You can choose plugins to use by using the <b class="programopt">-P</b>
+command-line option.  Pyrite Publisher will attempt to use the plugins
+you name, filling in the rest of the chain with whatever defaults are
+appropriate (unless the requested combination is impossible).  You do
+not need to specify the whole chain, and order doesn't matter.  For
+example, to use the tagged-text parser and create a zTXT instead of a
+regular Doc database, you could do the following:
+
+<P>
+<dl><dd><pre class="verbatim">
+% pyrpub -P TaggedText,zTXT foo.txt
+</pre></dl>
+
+<P>
+Each plugin may have its own command-line options to control its
+behavior.  The help text (viewable with the <b class="programopt">-h</b> option)
+shows the available options for all plugins, and you can list all of
+the installed plugins with <code>pyrpub -l</code>.
+
+<P>
+
+<H2><A NAME="SECTION000410000000000000000">
+3.1 E-Book Conversion Chains</A>
+</H2>
+
+<P>
+In most cases, the process of converting an input file to an e-book
+database is divided into four parts, each handled by one plugin:
+
+<P>
+
+<UL>
+<LI>Retrieving the input file  (<tt class="class">URLStream</tt> or
+  <tt class="class">PDBInput</tt>)
+</LI>
+<LI>Parsing the input: reflowing text, finding bookmarks,
+    analyzing markup, etc.  (<tt class="class">RawText</tt>, <tt class="class">Text</tt>,
+    <tt class="class">TaggedText</tt>, and <tt class="class">HTML</tt>)
+</LI>
+<LI>Applying markup and other reader-specific features
+  (<tt class="class">BasicDoc</tt>, <tt class="class">TealDoc</tt>, and <tt class="class">RichReader</tt>)
+</LI>
+<LI>Writing to the database (<tt class="class">DocOutput</tt> and <tt class="class">zTXT</tt>)
+</LI>
+</UL>
+
+<P>
+This process allows for support of multiple document formats without a
+lot of code duplication.  A single parser plugin can format the same
+input for many different e-book readers, given appropriate choices for
+the following plugins.
+
+<P>
+
+<H2><A NAME="SECTION000420000000000000000">
+3.2 Advanced Plugin Management: Protocols and Priorities</A>
+</H2>
+
+<P>
+Internally, Pyrite Publisher links plugins into chains by the use of
+named protocols.  A protocol is simply a specification for how two
+plugins talk to one another.  For example, the <var>doc-assembler</var>
+protocol describes how a parser plugin like <tt class="class">HTML</tt> talks to a
+markup plugin like <tt class="class">RichReader</tt>.  Every plugin knows what input
+protocols it supports, and what output protocol it will use when given
+a particular type of input, and Pyrite Publisher uses this information
+to decide what chains of plugins are possible.
+
+<P>
+The only exception to this is at the beginning of the chain.  The
+first plugin in the chain is responsible from getting input from
+outside of Pyrite Publisher, from a file or URL or some other
+location.  Its ``output protocol'' is actually the MIME type of the
+data.
+
+<P>
+For example, if you tell Pyrite Publisher to convert the file
+<span class="file">foo.html</span> (and you have the standard set of plugins), a typical
+chain would go something like this:
+
+<P>
+
+<OL>
+<LI>Since there are only two input plugins available,
+  <tt class="class">URLStream</tt> and <tt class="class">PDBInput</tt>, and this is not a
+  <code>.pdb</code> or <code>.prc</code> file, the <tt class="class">URLStream</tt> plugin is
+  activated to read the input file.
+</LI>
+<LI>The input file contains HTML, so the <tt class="class">URLStream</tt> plugin
+  declares that it will use the <var>text/html</var> or
+  <var>application/octet-stream</var> protocol to feed the data to the next
+  plugin.
+</LI>
+<LI>The <tt class="class">HTML</tt> plugin can handle the <var>text/html</var>
+  protocol, so it seems like a good choice to be the next one in the
+  stream.  Its output follows the <var>doc-assembler</var> protocol.
+</LI>
+<LI>There are several plugins that support the <var>doc-assembler</var>
+  protocol; the default is <tt class="class">BasicDoc</tt>.  The output of
+  <tt class="class">BasicDoc</tt> follows the <var>doc-database</var> protocol.
+</LI>
+<LI>The plugin that handles the <var>doc-database</var> protocol by
+  default is <tt class="class">DocOutput</tt>.  It declares no output, so the chain
+  ends here.
+</LI>
+</OL>
+
+<P>
+Some protocols are implemented by multiple plugins.  In the standard
+set of plugins, for example, there are at least three that handle
+<var>text/plain</var> and three that handle <var>doc-assembler</var>.  This
+means there are many possible ways to build a chain that converts a
+particular file into some kind of output.  Pyrite Publisher chooses
+which one of these possible chains to use based on a priority system
+that lets each plugin declare how good its handling of a particular
+protocol is.
+
+<P>
+For example, among the standard set of plugins plain text files can be
+handled by the <tt class="class">Text</tt>, <tt class="class">RawText</tt>, <tt class="class">TaggedText</tt>, and
+<tt class="class">HTML</tt> plugins.  Of those, the most generally useful choice is
+<tt class="class">Text</tt>, so it declares a higher priority for the
+<var>text/plain</var> protocol than the others.
+
+<P>
+If you name one or more plugins on the command line, Pyrite Publisher
+will choose a chain that includes them and use priorities to resolve
+any ambiguities that still exist.  You can adjust the priorities of
+individual plugins using the configuration file, described below.
+
+<P>
+
+<H1><A NAME="SECTION000500000000000000000">
+4 Configuration and Options</A>
+</H1>
+
+<P>
+Each Pyrite Publisher plugin can have its own set of configurable
+options, called <i>properties</i>.  The command <code>pyrpub
+  -list-properties</code> will display a list of all plugin properties.
+
+<P>
+At startup, Pyrite Publisher reads a configuration file called 
+<span class="file">.pyrpub</span> in your home directory.  This configuration file can
+contain two types of statements: <i>set</i> statements which set a
+plugin property, and <i>priority</i> statements which control plugin
+priorities.
+
+<P>
+A <i>set</i> statement looks like this:
+
+<P>
+
+<UL>
+<LI><tt class="keyword">set</tt> <var>plugin</var>.<var>property</var> = <var>value</var> ;
+</LI>
+</UL>
+
+<P>
+The semicolon at the end of the line is required.  String values don't
+need to be quoted unless they contain non-alphanumeric characters.
+For boolean properties, the value should be either ``1'' or ``0''.
+
+<P>
+The <i>priority</i> statement comes in three forms:
+
+<P>
+
+<UL>
+<LI><tt class="keyword">priority</tt> <var>plugin</var> <var>input-protocol</var>
+    <var>output-protocol</var> <var>number</var> ;
+</LI>
+<LI><tt class="keyword">priority</tt> <var>plugin</var> <var>input-protocol</var>
+    <var>number</var>
+</LI>
+<LI><tt class="keyword">priority</tt> <var>plugin</var> <var>number</var>
+</LI>
+</UL>
+
+<P>
+The first form sets a plugin's priority for a specific pair of input
+and output protocols; if that combination is invalid there will be no
+effect.  The second form sets the plugin's priority for a specific
+input protocol and all possible outputs.  The third form sets the
+plugin's priority for all possible combinations of input and output.
+
+<P>
+The second form is probably the most useful.  If you use TealDoc all
+the time, for example, the following statement in your
+<span class="file">.pyrpubrc</span> file might be helpful:
+
+<P>
+<dl><dd><pre class="verbatim">
+priority TealDoc ``doc-assembler'' 100
+</pre></dl>
+
+<P>
+
+<H1><A NAME="SECTION000600000000000000000">
+5 Standard Plugins</A>
+</H1>
+
+<P>
+The plugins described in this section are provided with Pyrite
+Publisher.  If any of them are missing, it is likely that your
+installation is broken.
+
+<P>
+Unless otherwise specified, all plugin properties can be specified on
+the command line, by translating underscores to dashes.  For example,
+a property called <var>some_property</var> will have a corresponding
+command line option called <b class="programopt">--some-property</b>.
+
+<P>
+
+<H2><A NAME="SECTION000610000000000000000">
+5.1 Protocols and Priorities</A>
+</H2>
+
+<P>
+The standard plugins use the following protocols:
+
+<P>
+<table border align="center" style="border-collapse: collapse">
+  <thead>
+    <tr>
+      <th align="left"><b>Protocol</b>&nbsp;</th>
+      <th align="left"><b>Priorities</b>&nbsp;</th>
+      <th align="left"><b>Description</b>&nbsp;</th>
+    </thead>
+  <tbody valign='baseline'>
+    <tr><td align="left" valign="baseline"><textbf>application/octet-stream</textbf></td>
+        <td align="left"><tt class="class">RawText</tt> 0</td>
+        <td align="left">MIME type for arbitrary data input</td>
+    <tr><td align="left" valign="baseline"><textbf>text/html</textbf></td>
+        <td align="left"><tt class="class">HTML</tt> 0</td>
+        <td align="left">MIME type for HTML input</td>
+    <tr><td align="left" valign="baseline"><textbf>text/plain</textbf></td>
+        <td align="left"><tt class="class">Text</tt> 0, <tt class="class">HTML</tt> -10, <tt class="class">TaggedText</tt> -10</td>
+        <td align="left">MIME type for text input</td>
+    <tr><td align="left" valign="baseline"><textbf>doc-assembler</textbf></td>
+        <td align="left"><tt class="class">BasicDoc</tt> 10, <tt class="class">RichReader</tt> 0, <tt class="class">TealDoc</tt> 0</td>
+        <td align="left">Markup generator</td>
+    <tr><td align="left" valign="baseline"><textbf>doc-output</textbf></td>
+        <td align="left"><tt class="class">DocOutput</tt> 0, <tt class="class">TextOutput</tt> -1000, <tt class="class">zTXT</tt> -1</td>
+        <td align="left">General e-book database output</td>
+    <tr><td align="left" valign="baseline"><textbf>doc-only-output</textbf></td>
+        <td align="left"><tt class="class">DocOutput</tt> 0, <tt class="class">TextOutput</tt> -1000</td>
+        <td align="left">Doc-format database output</td>
+    <tr><td align="left" valign="baseline"><textbf>DOC:raw</textbf></td>
+        <td align="left"><tt class="class">CopyDoc</tt> 0</td>
+        <td align="left">Special protocol for e-book metadata
+  passing</td><P>
+
+    </tbody>
+</table>
+
+<P>
+
+<H2><A NAME="SECTION000620000000000000000">
+5.2 <tt class="class">URLStream</tt> - Input from a file or URL</A>
+</H2>
+
+<P>
+The <tt class="class">URLStream</tt> plugin is the standard input handler.  It allows
+Pyrite Publisher to retrieve input from local files or from remote
+locations specified by http or ftp URLs.  If the file or remote URL
+ends in <code>.gz</code> it will be un-gzipped automatically.  This plugin
+also determines the MIME type of the input, which in turn determines
+what the next plugin in the chain will be.
+
+<P>
+The <tt class="class">URLStream</tt> plugin has no properties or command-line
+options.
+
+<P>
+
+<H2><A NAME="SECTION000630000000000000000">
+5.3 <tt class="class">PDBInput</tt> - Input from a Doc or zTXT database</A>
+</H2>
+
+<P>
+The <tt class="class">PDBInput</tt> plugin handles input from files or URLs ending in
+<code>.pdb</code> or <code>.prc</code>.  Unlike <tt class="class">URLStream</tt> it does not
+automatically un-gzip.  If the input is a Doc or zTXT database it will
+be decompressed and treated as if it was a text file.  In addition,
+metadata such as the document title and bookmarks may be passed along
+if the next plugin in the chain is compatible.  If the input is not a
+Doc or zTXT database, or if it isn't a Palm database at all, it won't
+be converted at all.
+
+<P>
+The <tt class="class">PDBInput</tt> plugin has no properties or command-line
+options.
+
+<P>
+
+<H2><A NAME="SECTION000640000000000000000">
+5.4 <tt class="class">RawText</tt> - Raw text parser</A>
+</H2>
+
+<P>
+The <tt class="class">RawText</tt> plugin takes raw text input and passes it along to
+an assembler plugin without any additional processing whatsoever.
+
+<P>
+The <tt class="class">RawText</tt> plugin has no properties or command-line options.
+
+<P>
+
+<H2><A NAME="SECTION000650000000000000000">
+5.5 <tt class="class">Text</tt> - Text parser</A>
+</H2>
+
+<P>
+The <tt class="class">Text</tt> plugin takes text input and re-flows it to be more
+readable in a handheld document reader.  Generally this consists of
+joining paragraphs into long lines so that they will be wrapped
+by the reader on the handheld.  In addition, this plugin can
+automatically add bookmarks based on a regular expression search.
+
+<P>
+The <tt class="class">Text</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>bookmark_regexps</STRONG></DT>
+<DD>Regular expressions to search for and
+  bookmark.  May be specified multiple times on in the configuration
+  file or on the command line to search for more than one regular
+  expression.  (Command line option <b class="programopt">-r</b>)
+  
+</DD>
+<DT><STRONG>indented_paragraphs</STRONG></DT>
+<DD>(boolean) If true, checks for indentation
+  to determine the beginning of paragraphs, instead of looking for
+  blank lines separating them.  (Command line option
+  <b class="programopt">--indented-paragraphs</b>)
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000660000000000000000">
+5.6 <tt class="class">TaggedText</tt> - Tagged text parser</A>
+</H2>
+
+<P>
+The <tt class="class">TaggedText</tt> plugin does the same sort of paragraph
+reformatting as the <tt class="class">Text</tt> plugin, but it also interprets
+special markup tags embedded in the text to set bookmarks, add
+annotations and headers, and the like.  This is intended primarily to
+make it easier to produce e-books from plain text files, by marking
+interesting bits without requiring a full markup language like HTML.
+
+<P>
+The tags supported by this plugin are as follows:
+
+<P>
+<DL>
+<DT><STRONG>TITLE <i>title</i></STRONG></DT>
+<DD>Set the document title.
+  
+</DD>
+<DT><STRONG>BOOKMARK <i>label</i></STRONG></DT>
+<DD>Set a bookmark.
+  
+</DD>
+<DT><STRONG>BM <i>label</i></STRONG></DT>
+<DD>Same as BOOKMARK.
+  
+</DD>
+<DT><STRONG>Hn <i>text</i></STRONG></DT>
+<DD>Insert a heading; ``n'' is a digit from 1 to 6
+  specifying the heading level.
+  
+</DD>
+<DT><STRONG>ANNOTATION <i>label</i></STRONG></DT>
+<DD>Insert an annotation.  The annotation
+  text follows this tag, up to an /ANNOTATION tag.
+  
+</DD>
+<DT><STRONG>PRE</STRONG></DT>
+<DD>Insert preformatted text.  The text following this tag up
+  to a /PRE tag is copied verbatim without reflowing paragraphs.
+  
+</DD>
+<DT><STRONG>HR</STRONG></DT>
+<DD>Insert a horizontal rule.
+</DD>
+</DL>
+
+<P>
+By default, all tags must appear on a line by themselves, prefixed by
+a single period.
+
+<P>
+The <tt class="class">TaggedText</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>bookmark_regexps</STRONG></DT>
+<DD>Regular expressions to search for and
+  bookmark.  May be specified multiple times on in the configuration
+  file or on the command line to search for more than one regular
+  expression.  (Command line option <b class="programopt">-r</b>)
+  
+</DD>
+<DT><STRONG>case_fold_tags</STRONG></DT>
+<DD>(boolean) If true, markup tags can be
+  lowercase or mixed-case.
+  
+</DD>
+<DT><STRONG>tag_prefix</STRONG></DT>
+<DD>The prefix which appears before each tag (the
+  default is a single period).
+  
+</DD>
+<DT><STRONG>tag_regexp</STRONG></DT>
+<DD>A regular expression which matches a tag and its
+  argument.  It must contain two named groups, <var>tag</var> and
+  <var>arg</var>, which match the tag and its argument respectively.  A
+  string-substitution variable named <var>prefix</var> will be replaced by
+  the value of the <var>tag_prefix</var> property.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000670000000000000000">
+5.7 <tt class="class">HTML</tt> - HTML parser</A>
+</H2>
+
+<P>
+The <tt class="class">HTML</tt> plugin parses HTML input and creates markup events
+which the next plugin in the chain can use to display it appropriately
+on the handheld.  (If the next plugin ignores markup, the result will
+be to simply strip HTML tags from the input.)  It can also produce
+footnotes showing link targets and set bookmarks at HTML headers and
+anchors.
+
+<P>
+The <tt class="class">HTML</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>annotate_links</STRONG></DT>
+<DD>(boolean) If true, links in the input HTML
+  will be marked in the output text, and the link target will be added
+  to the output document as an annotation.
+  
+</DD>
+<DT><STRONG>bookmark_anchors</STRONG></DT>
+<DD>(boolean) If true, anchors with a <var>name</var>
+  attribute will be bookmarked.
+  
+</DD>
+<DT><STRONG>bookmark_headers</STRONG></DT>
+<DD>The value of this property is a string which
+  can contain one or more of the digits 1 through 6.  The
+  corresponding HTML header levels will be bookmarked.
+  
+</DD>
+<DT><STRONG>footnote_links</STRONG></DT>
+<DD>(boolean) If true, links in the input HTML
+  will be marked in the output text, and the link targets will be
+  listed at the end of the output text.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000680000000000000000">
+5.8 <tt class="class">BasicDoc</tt> - Standard e-book assembler</A>
+</H2>
+
+<P>
+The <tt class="class">BasicDoc</tt> plugin creates a plain-text e-book, ignoring any
+markup the previous plugin asks for.
+
+<P>
+The <tt class="class">BasicDoc</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>footnote_marker_format</STRONG></DT>
+<DD>The format of footnote markers in the
+  output text.  This property should contain a single <code>%s</code> which
+  will be replaced by the footnote number.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000690000000000000000">
+5.9 <tt class="class">TealDoc</tt> - TealDoc-enhanced e-book assembler</A>
+</H2>
+
+<P>
+The <tt class="class">TealDoc</tt> plugin creates a Doc e-book with markup that is
+viewable in the TealDoc application.  (The resulting document can be
+read in a normal Doc reader, but the markup will be visible as tags
+embedded in the text.)
+
+<P>
+The <tt class="class">TealDoc</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>footnote_marker_format</STRONG></DT>
+<DD>The format of footnote markers in the
+  output text.  This property should contain a single <code>%s</code> which
+  will be replaced by the footnote number.
+  
+</DD>
+<DT><STRONG>hN_style</STRONG></DT>
+<DD>The style of headings; N is a digit from 1 to 6
+  specifying a heading level.  A style consists of one or more words,
+  separated by spaces, which may include: ``large'' or ``bold'' to
+  specify font size, ``underline'' or ``invert'' to specify font
+  decoration, and ``center'' or ``right'' to specify justification.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0006100000000000000000">
+5.10 <tt class="class">RichReader</tt> - RichReader-enhanced e-book assembler</A>
+</H2>
+
+<P>
+The <tt class="class">RichReader</tt> plugin creates a Doc e-book with markup that is
+viewable in the RichReader application.  (The resulting document can
+be read in a normal Doc reader, but the markup will be visible as
+``garbage'' characters embedded in the text.)
+
+<P>
+The <tt class="class">RichReader</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>footnote_marker_format</STRONG></DT>
+<DD>The format of footnote markers in the
+  output text.  This property should contain a single <code>%s</code> which
+  will be replaced by the footnote number.
+  
+</DD>
+<DT><STRONG>hN_style</STRONG></DT>
+<DD>The style of headings; N is a digit from 1 to 6
+  specifying a heading level.  A style consists of one or more words,
+  separated by spaces, which may include: ``normal'', ``small'', or
+  ``large'' to specify font size; one or more of ``bold'', ``italic'',
+  ``fixed'', ``underline'', and ``dotted'' to specify font decoration;
+  and ``left'', ``right'', or ``center'' to specify justification.
+  Note that these properties cannot be set from the command line, only
+  in the configuration file.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0006110000000000000000">
+5.11 <tt class="class">DocOutput</tt> - Output to a Doc-format database</A>
+</H2>
+
+<P>
+The <tt class="class">DocOutput</tt> plugin creates a Doc-format e-book database,
+usable by any Doc-compatible application.
+
+<P>
+The <tt class="class">DocOutput</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>title</STRONG></DT>
+<DD>The document title.  (Command line option
+  <b class="programopt">-t</b>)
+  
+</DD>
+<DT><STRONG>backup</STRONG></DT>
+<DD>(boolean) If true, set the backup bit of the document
+  database.  (Command line option <b class="programopt">-b</b>)
+  
+</DD>
+<DT><STRONG>category</STRONG></DT>
+<DD>The category number of the document.  (Note: This is
+  only useful if you know the category name to number mapping of your
+  document reader.)  (Command line option <b class="programopt">-c</b>)
+  
+</DD>
+<DT><STRONG>creator</STRONG></DT>
+<DD>The creator ID of the document database.  The default
+  is ``<code>REAd</code>''.  (Command line option <b class="programopt">-C</b>)
+  
+</DD>
+<DT><STRONG>type</STRONG></DT>
+<DD>The type ID of the document database.  The default is
+  ``<code>TEXt</code>''. (Command line option <b class="programopt">-T</b>)
+  
+</DD>
+<DT><STRONG>output_directory</STRONG></DT>
+<DD>Directory to place document databases
+  into. (Command line option <b class="programopt">-d</b>)
+  
+</DD>
+<DT><STRONG>output_filename</STRONG></DT>
+<DD>Full name (including directory) of the output
+  database.  Note that this will produce unwanted results if you are
+  converting more than one document at one time.  (Command line option
+  <b class="programopt">-o</b>)
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0006120000000000000000">
+5.12 <tt class="class">zTXT</tt> - Output to a zTXT-format database</A>
+</H2>
+
+<P>
+The <tt class="class">zTXT</tt> plugin creates a zTXT-format e-book database.  The
+zTXT format is currently supported by the Weasel reader, and provides
+annotations and better compression than the Doc format.
+
+<P>
+The <tt class="class">zTXT</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>title</STRONG></DT>
+<DD>The document title.  (Command line option
+  <b class="programopt">-t</b>)
+  
+</DD>
+<DT><STRONG>output_directory</STRONG></DT>
+<DD>Directory to place document databases
+  into. (Command line option <b class="programopt">-d</b>)
+  
+</DD>
+<DT><STRONG>output_filename</STRONG></DT>
+<DD>Full name (including directory) of the output
+  database.  Note that this will produce unwanted results if you are
+  converting more than one document at one time.  (Command line option
+  <b class="programopt">-o</b>)
+  
+</DD>
+<DT><STRONG>random_access</STRONG></DT>
+<DD>(boolean) If true the document is compressed in
+  ``random access'' mode which provides better efficiency and allows
+  larger documents to be read, at the cost of a few percent of
+  compression.  The default is for this property to be true, so
+  specifying it on the command line will turn it off.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0006130000000000000000">
+5.13 <tt class="class">TextOutput</tt> - Output to a text file or the console</A>
+</H2>
+
+<P>
+The <tt class="class">TextOutput</tt> plugin sends output to the console or to a text
+file, instead of putting it in a database, to facilitate conversion of
+e-books back to plain text.
+
+<P>
+The <tt class="class">TextOutput</tt> plugin has the following properties:
+
+<P>
+<DL>
+<DT><STRONG>output_filename</STRONG></DT>
+<DD>Full name (including directory) of the output
+  database.  Note that this will produce unwanted results if you are
+  converting more than one document at one time.  (Command line option
+  <b class="programopt">-o</b>)
+  
+</DD>
+<DT><STRONG>dump_annotations</STRONG></DT>
+<DD>(boolean) If true, output all annotation
+  records (if present) after the text.
+  
+</DD>
+<DT><STRONG>dump_bookmarks</STRONG></DT>
+<DD>(boolean) If true, output all bookmarks (if
+  present) after the text.
+  
+</DD>
+<DT><STRONG>dump_appinfo</STRONG></DT>
+<DD>(boolean) If true, output a string
+  representation of the appinfo block (if present) after the text.
+  
+</DD>
+<DT><STRONG>dump_all</STRONG></DT>
+<DD>(boolean) If true, dump all annotations, bookmarks,
+  and appinfo block after the text.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION0006140000000000000000">
+5.14 <tt class="class">CopyDoc</tt> - Copy from one e-book database format to
+  another</A>
+</H2>
+
+<P>
+The <tt class="class">CopyDoc</tt> plugin works with the <tt class="class">PDBInput</tt> plugin to
+copy a document directly to an output plugin without any parsing or
+other processing.  It is intended to allow one document format to be
+converted to another; for example, the following command will convert
+an existing e-book to zTXT format, preserving bookmarks and
+annotations if possible:
+
+<P>
+<dl><dd><pre class="verbatim">
+% pyrpub -P CopyDoc,zTXT foo.pdb
+</pre></dl>
+
+<P>
+
+<H1><A NAME="SECTION000700000000000000000">
+6 Plugin Developers Reference</A>
+</H1>
+
+<P>
+This section will be filled in later.
+
+<P>
+
+<H1><A NAME="SECTION000800000000000000000">
+7 Protocols Reference</A>
+</H1>
+
+<P>
+This section will be filled in later.
+
+<P>
+
+<H1><A NAME="SECTION000900000000000000000">
+8 Low-Level Modules Reference</A>
+</H1>
+
+<P>
+This section will be filled in later.
+
+<P>
+
+<H1><A NAME="SECTION0001000000000000000000">
+About this document ...</A>
+</H1>
+ <strong>Pyrite Publisher</strong>
+<p> This document was generated using the <a
+    href="http://saftsack.fs.uni-bayreuth.de/~latex2ht/">
+    <strong>LaTeX</strong>2<tt>HTML</tt></a> translator.
+</p>
+
+<p> <a
+    href="http://saftsack.fs.uni-bayreuth.de/~latex2ht/">
+    <strong>LaTeX</strong>2<tt>HTML</tt></a> is Copyright &copy;
+  1993, 1994, 1995, 1996, 1997, <a
+    href="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos
+    Drakos</a>, Computer Based Learning Unit, University of
+  Leeds, and Copyright &copy; 1997, 1998, <a
+    href="http://www.maths.mq.edu.au/~ross/">Ross
+    Moore</a>, Mathematics Department, Macquarie University,
+  Sydney.
+</p>
+
+<p> The application of <a
+    href="http://saftsack.fs.uni-bayreuth.de/~latex2ht/">
+    <strong>LaTeX</strong>2<tt>HTML</tt></a> to the Python
+  documentation has been heavily tailored by Fred L. Drake,
+  Jr.  Original navigation icons were contributed by Christopher
+  Petrilli.
+</p>
+
+<DIV CLASS="navigation"><p><hr><table align="center" width="100%" cellpadding="0" cellspacing="2">
+<tr>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+<td><A HREF="http://www.pyrite.org/"><img src="../icons/up.gif" border="0" height="32"
+  alt="Up One Level" width="32"></A></td>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+<td align="center" width="100%">Pyrite Publisher</td>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+<td><img src="../icons/blank.gif" border="0" height="32"
+  alt="" width="32"></td>
+</tr></table>
+<b class="navlabel">Up:</b> <a class="sectref" HREF="http://www.pyrite.org/">The Pyrite Project</A>
+</DIV>
+<!--End of Navigation Panel-->
+
+</BODY>
+</HTML>

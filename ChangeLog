@@ -1,0 +1,451 @@
+2002-03-27  Rob Tillotson  <rob@pyrite.org>
+
+	* Release 2.1.0
+	
+	* PyritePublisher/config.py (PPConfigProcessor.cmd_inputfilter):
+	Added inputfilter command support.
+
+	* PyritePublisher/dtkmain.py (PPInstance.__init__): Pass instance
+	to config processor.
+
+	* PyritePublisher/plugin_URLStream.py: Moved URLStream plugin to
+	its own file.
+	(Plugin): Added support for external filters which convert one
+	mime type to another.
+
+	* PyritePublisher/dtkplugins.py (load_all_plugins): Check for
+	plugin usability.
+
+2002-03-26  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/plugin_ztxtoutput.py: Use PDBOutput instead of
+	native.
+
+	* PyritePublisher/ztxt.py (zTXTWriteStream.close): Allow passing
+	of prc.File object instead of filename.
+
+	* PyritePublisher/plugin_docoutput.py: Use PDBOutput instead of
+	native.
+
+	* PyritePublisher/plugin_pdboutput.py (Plugin.close): Added
+	install support.
+
+	* PyritePublisher/doc_database.py (DocWriteStream.close): Allow
+	passing of an already opened prc.File object instead of a filename.
+
+	* PyritePublisher/plugin_pdboutput.py (Plugin.close): Added unique
+	name generation.
+
+	* PyritePublisher/plugin_docoutput.py: Moved DocOutput plugin to
+	separate file.
+
+	* PyritePublisher/dtkmain.py (Chain.pathfind): Rewrote using a
+	graph-traversal algorithm to allow for cycles and such.
+
+	* PyritePublisher/dbprotocol.py: Added.
+
+	* PyritePublisher/plugin_jfile.py: Added.
+
+	* PyritePublisher/plugin_dbfieldguess.py: Added.
+
+2002-02-05  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkplugins.py (load_all_plugins): Only try to
+	load plugins if __file__ is a .py.  (Modules inside a py2exe
+	compressed archive have a __file__, but it is something like
+	"<foo.py in archive bar.exe>".
+	(load_all_plugins): Fully qualify names from the plugin_modules
+	metadata.
+
+	* setup.py: Add support for py2exe on win32.
+
+	* PyritePublisher/pyrpub: Exit after running GUI.
+
+	* PyritePublisher/pyrpub: Try importing gui_wxwin from PyritePublisher.
+
+	* PyritePublisher/gui_wxwin.py (PPMainFrame.__init__): Add task
+	picker.
+	(PPMainFrame.init_advanced_options): Comment out plugin pickers.
+	(PPMainFrame.do_options): Handle task selection.
+	(PPMainFrame.do_options): Fix return of forced plugins.
+
+	* PyritePublisher/plugin_pdbinput.py (Plugin.open_input): Win32
+	filename fix.
+
+	* PyritePublisher/dtkplugins.py (URLStreamInputPlugin.open_input):
+	Win32 filename fix.
+
+2002-01-09  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/plugin_RichReader.py (Plugin.__init__): Register task.
+
+	* PyritePublisher/plugin_TealDoc.py (Plugin.__init__): Register task.
+
+	* PyritePublisher/dtkplugins.py (DocDBOutputPlugin.__init__):
+	Removed -C and -T short options.
+	(load_all_plugins): Get list of plugins from generated metadata if
+	necessary.
+
+	* PyritePublisher/plugin_ztxtoutput.py (Plugin.__init__): Added
+	task definitions.
+
+	* PyritePublisher/dtkmain.py (TaskDefinition): Added.
+	(PPInstance.register_task): Added.
+	(PPCLI.cmd_list_tasks): Added.
+
+2002-01-07  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkplugins.py (DTKPlugin.has_feature): Added.
+
+2002-01-01  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/gui_wxwin.py: Added.
+
+	* PyritePublisher/dtkmain.py (PPInstance.find_plugins_with_link): Added.
+	(PPInstance.set_property_all): Added.
+
+	* PyritePublisher/plugin_textoutput.py (Plugin.__init__): Fixed
+	call to superclass.
+
+	* PyritePublisher/plugin_TaggedText.py (Plugin.__init__): Fixed
+	call to superclass.
+
+	* PyritePublisher/plugin_Text.py (Plugin.__init__): Fixed call to
+	superclass.
+
+	* PyritePublisher/plugin_frotz.py (Plugin.__init__): Register
+	wildcards.
+
+	* PyritePublisher/plugin_pdbinput.py (Plugin.__init__): Register
+	wildcards.
+
+	* PyritePublisher/plugin_HTML.py (Plugin.__init__): Register
+	wildcards.
+
+	* PyritePublisher/dtkmain.py (PPInstance.register_wildcard): Added.
+
+2001-12-29  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkmain.py (PPInstance.find_installer): Added.
+
+	* PyritePublisher/dtkplugins.py (load_all_plugins): Add API call
+	support. (Also throughout the rest of this file and other
+	plugins.)
+
+	* PyritePublisher/plugin.py (CallableLoader.load_plugins): Fixed a
+	stupid error display bug.
+
+	* PyritePublisher/plugin_basicdoc.py: Moved code from dtkplugins.py.
+
+	* PyritePublisher/dtkplugins.py (DocDBOutputPlugin): Made installable.
+	(InstallerPlugin): Added.
+
+	* PyritePublisher/plugin_ztxtoutput.py (Plugin): Made installable.
+
+	* PyritePublisher/dtkplugins.py (OutputPlugin.__init__): Added
+	direct install support.
+
+	* PyritePublisher/prc_install.py: Added.
+
+	* PyritePublisher/dtkmain.py (PPInstance.has_plugin): Added.
+	(PPInstance.get_plugin): Added.
+	(PPCLI.cmd_list_plugins): Distinguish between filter plugins
+	[which return a list of supported links] and others.
+
+2001-12-27  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/prc.py (PCache.updateDBInfo): Added.
+
+	* PyritePublisher/dtkplugins.py (URLStreamInputPlugin.open_input):
+	Guess mimetypes from some URLs, and whenever text/plain or
+	application/octet-stream are otherwise chosen.
+
+	* PyritePublisher/plugin_pdboutput.py: Added.
+
+	* PyritePublisher/dtkmain.py (PPInstance): More refactoring.
+
+2001-12-25  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkplugins.py (DTKCallback): Removed, since the
+	PPInstance is now its own callback.
+
+	* PyritePublisher/dtkmain.py (PPInstance): Added as part of main
+	program refactoring.
+	(PPCLI): Same.
+
+2001-12-24  Rob Tillotson  <rob@pyrite.org>
+
+	* Release 2.0.0
+	
+	* PyritePublisher/plugin_TealDoc.py (Plugin.__init__): Added
+	heading style properties.
+
+	* PyritePublisher/plugin_RichReader.py
+	(RichReaderDocWriter.send_heading): Fix restoration of justify
+	after a centered header.
+	(Plugin.__init__): Added heading style properties.
+
+	* PyritePublisher/plugin_HTML.py (DocHTMLParser.handle_data):
+	Added capability for capturing text without swallowing it (like
+	save_bgn/save_end).
+
+	* PyritePublisher/dtkplugins.py (load_all_plugins): Fixed mismatch
+	between builtin plugin names and keys in plugin dictionary.
+	(RawParserPlugin): Renamed to 'RawText'.
+	(DocDBOutputPlugin): Renamed to 'DocOutput'.
+
+	* PyritePublisher/plugin_textoutput.py (FakeDocStream.close):
+	Added doc-only-output link for debugging.
+
+	* PyritePublisher/dtkplugins.py (BasicDocWriter.mark_footnote): Added.
+	(BasicAssemblerPlugin.__init__): Added footnote_marker_format
+	property/option.
+
+	* PyritePublisher/plugin_textoutput.py (FakeDocStream.close):
+	Don't close output stream if it is stdout or stderr.
+
+	* PyritePublisher/plugin_HTML.py (Plugin.open): Use copyProperties
+	to transfer preferences.
+	(Plugin.__init__): Change no_link_footnotes to footnote_links,
+	and no_anchor_bookmarks to bookmark_anchors
+	(DocHTMLParser.*): See above.
+
+	* PyritePublisher/plugin_TaggedText.py (Plugin.feed): Add bookmark
+	regexp searching.
+	(Plugin.__init__): Same.
+
+2001-12-23  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/plugin_textoutput.py (Plugin): Added text-output
+	link for use by future doc-dumper plugins.
+
+2001-12-20  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkmain.py (main): Added loading of .pyrpubrc.
+	(main): Added list_properties option/code.
+
+	* PyritePublisher/config.py: Added.
+
+	* PyritePublisher/dtkplugins.py (DTKPlugin.set_priority): Added
+	(for config support).
+
+	* PyritePublisher/plugin.py (PropertyMixin.has_property): Added.
+
+	* PyritePublisher/dtkmain.py (main): Allow multiple plugins to be
+	specified with multiple -P options, in addition to by using
+	commas.
+
+	* PyritePublisher/plugin_debugoutput.py (FakeDocStream): Allow
+	specification of file to write to.
+	(Plugin.__init__): Added output_filename and various dump_*
+	options.
+
+	* PyritePublisher/plugin.py (PropertyMixin.copyProperties): Added.
+
+	* PyritePublisher/plugin_ztxtoutput.py (Plugin.open): Added output
+	filename option.
+
+	* PyritePublisher/dtkplugins.py (DocDBOutputPlugin.__init__):
+	Added output filename option.
+	(DocDBOutputPlugin.open): Same.
+
+	* PyritePublisher/doc_database.py (DocWriteStream.has_feature): Added.
+
+	* PyritePublisher/plugin_copydoc.py: Added (first DOC:raw plugin).
+
+	* PyritePublisher/plugin_pdbinput.py (Plugin.open_input): Added zTXT
+	support.
+	(Plugin.go): Same.
+	(Plugin.open_doc): Return text/plain mimetype instead of
+	application/octet-stream.
+	(Plugin.go): Added DOC:raw protocol support.
+
+	* PyritePublisher/ztxt.py (zTXTReadStream.__getattr__): Added.
+
+	* PyritePublisher/doc_database.py (bookmark_unpack): Was stupidly
+	broken.
+
+	* PyritePublisher/ztxt.py (zTXTReadStream.get_annotations): Added.
+	(zTXTReadStream.get_bookmarks): Added.
+
+	* PyritePublisher/plugin_Text.py (Plugin.feed): Add regexp
+	matching for bookmarks.
+	(Plugin.__init__): Same.
+
+	* PyritePublisher/doc_database.py (bookmark_pack): Null-terminate
+	bookmark titles.
+
+	* PyritePublisher/ztxt.py (zTXTWriteStream.close): Null-terminate
+	bookmark and annotation titles.
+
+	* PyritePublisher/plugin_HTML.py (Plugin.__init__): Added
+	bookmark_headers.
+	(DocHTMLParser.end_h1 et. al.): Same.
+
+	* PyritePublisher/doc_database.py (DocReadStream.get_bookmarks):
+	Added.
+
+2001-12-19  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/doc_database.py (DocReadStream.__getattr__): Added.
+
+	* Release 1.99.3
+	
+	* PyritePublisher/plugin.py (CLIOptionParser.__call__): Support
+	multiple plugins with the same commandline arguments.
+
+	* PyritePublisher/dtkplugins.py (DocDBOutputPlugin.open): Added
+	output directory option.
+
+	* PyritePublisher/plugin_ztxtoutput.py (Plugin.open): Added output
+	directory option.
+
+	* PyritePublisher/plugin_TaggedText.py (TagAPI): Added text
+	capture support for multiline tags.
+	(Plugin.feed): Same.
+	(TagAPI.process): Fixed case folding to actually work.
+	(TagAPI.process): Added support for end-tag methods.
+	(TagAPI.begin_ANNOTATION): Added annotation support.
+
+2001-12-18  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkplugins.py (load_all_plugins): Fixed path
+	problem which prevented plugins from loading the pyrpub script is
+	located in a different directory.
+	(load_all_plugins): Construct list of plugins dynamically.
+
+	* PyritePublisher/plugin_HTML.py (DocHTMLParser): Swallow and
+	ignore <style> tags.
+
+	* PyritePublisher/dtkplugins.py
+	(URLStreamInputPlugin.open_input): Do something less nonsensical
+	when converting a URL with no path/filename component.
+
+	* PyritePublisher/plugin_HTML.py (DocHTMLParser.anchor_end): Added
+	annotation support.
+	(Plugin.__init__): Same.
+	(Plugin.open): Same.
+
+	* PyritePublisher/plugin_TealDoc.py (TealDocWriter.__init__):
+	Added 'richtext' feature marker.
+
+	* PyritePublisher/plugin_RichReader.py
+	(RichReaderDocWriter.__init__): Added 'richtext' feature marker.
+
+	* PyritePublisher/doc_database.py (DocWriteStream.has_feature): Added.
+
+	* PyritePublisher/dtkplugins.py (BasicDocWriter.set_annotation):
+	Added annotation support.
+	(BasicDocWriter.has_feature): Added.
+
+	* PyritePublisher/doc_database.py (DocWriteStream.annotate): Added
+	stub function.
+
+	* PyritePublisher/plugin_QED.py (Plugin): Changed to use
+	doc-only-output.
+
+	* PyritePublisher/plugin_TealDoc.py (Plugin): Changed to use
+	doc-only-output.
+
+	* PyritePublisher/plugin_RichReader.py (Plugin): Changed to use
+	doc-only-output.
+
+	* PyritePublisher/dtkplugins.py (DocDBOutputPlugin): Added a new
+	link type, doc-only-output, so that the previous plugin in the
+	chain can force the Doc format even if there are multiple output
+	plugins which follow the Doc DB API.
+
+	* PyritePublisher/plugin_Text.py (Plugin): Changed description.
+
+	* PyritePublisher/plugin_TealDoc.py (Plugin): Changed description.
+
+	* PyritePublisher/plugin_TaggedText.py (Plugin): Changed description.
+
+2001-12-17  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/plugin_RichReader.py (Plugin): Changed description.
+
+	* PyritePublisher/plugin_QED.py (Plugin): Changed description.
+
+	* PyritePublisher/plugin_HTML.py (Plugin): Changed description.
+
+	* PyritePublisher/dtkplugins.py (BasicAssemblerPlugin): Changed description.
+	(URLStreamInputPlugin): Same.
+	(DocDBOutputPlugin): Same.
+	(RawParserPlugin): Same.
+
+	* PyritePublisher/dtkmain.py (Chain.check_plugin): Fixed scope
+	bug.
+	(Chain.choose_best_plugin): Fixed scope bug.
+
+	* PyritePublisher/plugin_ztxtoutput.py: Added.
+
+	* PyritePublisher/ztxt.py: Added.
+
+	* PyritePublisher/plugin_TaggedText.py (TagAPI.__init__): Escape
+	re metacharacters in tag prefix.
+	(Plugin.__init__): Set default value of tag prefix.
+
+	* PyritePublisher/plugin.py: Added OptionParsingError exception.
+
+2001-06-25  Rob Tillotson  <rob@pyrite.org>
+
+	* Release 1.99.2
+	
+	* PyritePublisher/dtkplugins.py (PLUGINS): Comment out
+	undistributed plugins.  (This really should be automated.)
+
+	* PyritePublisher/plugin_HTML.py (DocHTMLParser): Fix import of
+	'entitydefs'.
+
+	* PyritePublisher/plugin_TealDoc.py: Fix import of 'metrics'.
+
+2001-05-31  Rob Tillotson  <rob@pyrite.org>
+
+	* Release 1.99.1
+
+	* PyritePublisher/dtkmain.py (main): Added hack to check for
+	--DEBUG command line option, which raises the plugin log level.
+
+	* PyritePublisher/prc.py: Replaced reference to Pyrite._ with a
+	stub.
+
+	* PyritePublisher/plugin.py (ObjectLoader.load_plugins): Added
+	"continue" after ImportError in plugin, and also traceback
+	logging.  (Debian bug #99379)
+
+2001-05-17  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/doc_database.py (bookmark_pack): Added.
+
+	* PyritePublisher/plugin_HTML.py (Plugin.eof): Fix NameError.
+
+2001-03-30  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkplugins.py (URLStreamInputPlugin.go): Accept
+	mimetype parameter.
+	(RawParserPlugin): Changed to accept application/octet-stream.
+	(RawParserPlugin.feed): Fixed typo.
+
+	* PyritePublisher/dtkmain.py (main): Adjusted pathfinding to use
+	multiple mimetypes returned from input plugin.
+	(main): Pass mimetype to input plugin's go() method.
+
+	* PyritePublisher/dtkplugins.py (URLStreamInputPlugin.open_input):
+	Made return multiple mimetypes.
+
+	* PyritePublisher/plugin_pdbinput.py: Added.
+
+	* PyritePublisher/doc_database.py (DocReadStream.__init__): Added
+	db parameter to allow stream-izing of an already existing prc.File
+	object.
+
+2001-03-29  Rob Tillotson  <rob@pyrite.org>
+
+	* Release 1.99.0
+
+	First preview release of Pyrite Publisher 2.0.
+	Changes from the last version of Doc Toolkit are too numerous to
+	mention; see the Doc Toolkit changelog for previous release
+	history.
+

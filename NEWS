@@ -1,0 +1,283 @@
+
+* Changes from 2.0.0 to 2.1.0 :
+
+  - Added a "task" system to make user interfaces easier.  A "task" is
+    a pre-selected combination of plugins and options which are used
+    to do some common operation with Pyrite Publisher.  Tasks are
+    registered by plugins according to what seems convenient -- for
+    example, the zTXT plugin defines tasks like "Convert a Doc to
+    zTXT".
+
+    From the command line, a task can be selected using the '-T'
+    option; a list of tasks can be displayed with the '--list-tasks'
+    option.  Additionally, if argv[0] is the name of a task, it will
+    be set automatically.  (The installer will eventually make
+    symlinks for them.)
+
+    In the GUI, task selection is a popup menu on the main screen.
+    
+  - The Doc output plugin no longer has a '-T' or '-C' command-line
+    option; '--type' and '--creator' still work though.
+      
+  - Pyrite Publisher now has a GUI.  (Run the "pyrpub" program with no
+    arguments to use it.) The command-line interface is still
+    considered the primary one; the GUI is provided mainly to make
+    Pyrite Publisher accessible to a wider range of users.  The GUI
+    uses wxPython and seems to work on both Unix and Windows.  Its
+    functionality is still somewhat limited, and it isn't particularly
+    pretty, but it does work...
+    
+  - Added the first steps toward database support.  Currently this
+    consists of a CSV parser, JFile 5 construction plugin, and a
+    type-guessing plugin which tries to guess some field metadata when
+    none is otherwise supplied.  (Database code should be considered
+    alpha-quality; it works but doesn't do anything fancy yet, and
+    is likely to change dramatically in the future.)
+  
+  - Added the ability to directly install databases using an
+    appropriate desktop application.  For output types where it is
+    appropriate, the '-i' option requests direct installation.
+    Installers are plugins, so support can be added in the future for
+    different desktop software.
+
+    Pyrite Publisher will attempt to choose an installation method
+    according to what desktop software you are using.  If it doesn't
+    make the right choice, you can pick an installer using a line in
+    ~/.pyrpubrc like this:
+
+        set installer="jpilot";
+
+    Most installers will delete the converted file after installation,
+    but you can keep it around by using the "keep_installed_files"
+    config file property or the --keep command line option.  (JPilot
+    is a notable exception to this, since the original file must be
+    present at installation time.)
+    
+    Currently available installers are:
+
+        jpilot - queue for installation in JPilot
+	pisock - use python-libpisock to install immediately
+	
+    
+  - Added conversion of z-code interactive fiction games to Palm
+    format.  The resulting databases can be used to play the games
+    with interpreters such as Pilot-Frotz and Frobnitz.  This
+    conversion is registered to MIME type application/x-zmachine
+    (which is what the ifarchive.org web server reports) and filenames
+    *.z[35678].
+  
+  - Pyrite Publisher will now attempt to make a better guess at the
+    MIME type of an input file if it is coming from an FTP site or
+    from a web site that reports it as plain text.
+
+  - Added generic input filter support to the standard input plugin.
+    If you have an external program that can convert a MIME type that
+    Pyrite Publisher doesn't handle to one that it does, that program
+    can now be run automatically.  To define filters put lines like
+    this into ~/.pyrpubrc:
+
+      inputfilter "application/pdf" "text/plain" "pdftotext %s -"
+
+    The filter command string must contain a single %s which is
+    replaced by the name of a file containing the input data, and the
+    filter must produce its output on stdout.
+
+  - The DocOutput plugin has been renamed to Doc.  Both it and the
+    zTXT plugin now use the PDBOutput plugin to create files instead
+    of doing it natively, which means that common options can now be
+    added to the PDBOutput plugin where they will apply to
+    everything.
+
+  - There is now a '--unique-names' option to the PDBOutput module,
+    which appends a (hopefully) unique string to the end of every
+    database name, to avoid collisions when you have more than one
+    document with the same title.  (Thanks to James Aspnes for the
+    idea.)
+
+  - [Developers] Plugin path finding has been rewritten to take cycles
+    into account, i.e. it will now work correctly with plugins which
+    input and output the same protocol or might otherwise create loops
+    in the filter path.  Also, the priority of a path is lowered by 1
+    for each plugin in it, making the shortest path preferred when
+    there would otherwise be more than one with the same priority.
+
+* Changes from 1.99.3 to 2.0.0:
+
+  - Added regular expression bookmarking to the Text and TaggedText
+    plugins.  To use it, specify one or more '-r' options on the
+    command line, each of which specifies a regular expression to
+    search for.  The following restrictions apply:
+
+    - Multi-line matches are not supported.
+
+    - If the regular expression contains grouping parentheses, group 1
+      will be used as the bookmark title; otherwise, the bookmark
+      title will be the entire match.
+
+    - The bookmark is placed at the beginning of the line on which the
+      match occurs.  Note that this is the beginning of the line
+      *before* paragraph reflowing, so if the match happens in the
+      middle of a paragraph, the bookmark will probably be placed a
+      bit before the matched text.
+
+  - Added automatic bookmarking of HTML headers.  To use this feature,
+    use the '--bookmark-headers' command line option.  The argument to
+    this option is a string consisting of one or more of the digits 1
+    through 6.  For example, if you use "--bookmark-headers 234" a
+    bookmark will be placed for <h2>, <h3>, and <h4> elements.
+
+  - Reorganized how the bookmark/annotation options work in the HTML
+    plugin.  All bookmarking and annotations are turned off by
+    default, and the options have been renamed accordingly.  If you
+    want them turned on by default, use the ~/.pyrpubrc file to set
+    them.
+
+  - Added a --footnote-marker-format option/property to the BasicDoc
+    assembler plugin.  (Currently the only thing that uses "footnotes"
+    is link-marking in HTML.)  The default is '[%d]'.  Note that the
+    other assemblers (RichReader, TealDoc) inherit this option at
+    present, but they will probably get their own markup-based
+    way of marking footnotes in the future.
+      
+  - Added a TextOutput plugin which dumps converted text, bookmarks,
+    etc. to standard output instead of writing to a database.  By
+    default it just dumps the text, making it useful for converting
+    Doc/zTXT back to plain text, but with the -D option it also dumps
+    bookmarks, annotations, and other metadata for debugging
+    purposes.
+
+  - Added a PDBInput plugin which takes input from a Doc or zTXT
+    database.  It will be used automatically if you specify a filename
+    or URL ending in .pdb or .prc, and its contents will be treated
+    exactly like a text file.  This means that, for example, you can
+    clean up Iambic and MobiPocket books by feeding them through the
+    HTML plugin, add regular expression bookmarks, etc.
+
+  - Added a CopyDoc plugin which works with PDBInput to copy a
+    document including metadata like bookmarks and annotations.  To
+    use this, choose a Doc or zTXT pdb/prc file as input, and specify
+    -P CopyDoc on the command line.  The document text will be copied
+    verbatim, along with metadata like bookmarks, the document title,
+    and annotations.  For instance, you can use it to convert Doc to
+    zTXT:
+
+        pyrpub -P CopyDoc,zTXT somedoc.pdb
+
+  - Removed all the stored-prefs related options from the zTXT output
+    plugin, after being informed by the author that the next version
+    of Gutenpalm won't be storing display prefs inside documents any
+    more.
+
+  - Added an output filename option (-o) to the Doc and zTXT output
+    plugins.
+
+  - Made RichReader and TealDoc heading styles configurable.
+    
+  - Renamed DocDBOutput -> DocOutput and RawDocStream -> RawText.
+  
+  - Multiple plugins can now be specified on the command line with
+    multiple -P options.  The old way of using a single -P option with
+    comma-separated plugin names still works too.
+
+  - Added support for a configuration file which allows setting of
+    plugin properties and priorities.
+
+  - Added a --list-properties option which shows all plugin properties
+    which are settable from the config file.
+
+  - Removed the doctotext script, as the same thing can be done with
+    the main program now.
+                
+           
+* Changes from 1.99.2 to 1.99.3 (pre-2.0):
+
+  This is a pre-release, and should be considered a work in progress.
+
+  - Added a zTXT output plugin.  zTXT is the document format used by
+    the free Gutenpalm reader (http://gutenpalm.sourceforge.net/),
+    which uses zlib to provide significantly better compression than
+    the standard Doc format.  The plugin is called "zTXT"; specify it
+    with the -P option to get a zTXT instead of a Doc.  (The zTXT
+    plugin has several optional arguments; check the help text for
+    details.)
+
+  - Added link annotation support to the HTML parser.  If the output
+    format supports annotations (eg. zTXT) link URLs can be appended
+    as annotations instead of or in addition to footnotes at the end
+    of the document.
+
+  - Added annotation tags to TaggedText, eg.
+       .ANNOTATION This is an annotation
+       Some text...
+       More text...
+       ./ANNOTATION
+
+  - Added an output directory option (-d <dir>).
+             
+  - Fixed some minor bugs in the TaggedText plugin and the option
+    parser.
+
+  Pyrite Publisher is now developed using Python 2.1, and probably
+  won't work on earlier versions.
+  
+
+* Changes from 1.99.1 to 1.99.2 (pre-2.0):
+
+  This is a pre-release, and should be considered a work in progress.
+
+  - Removed some more lingering references to Doc Toolkit and
+    as-yet-unreleased plugins.
+
+  Starting with this version, Pyrite Publisher should be considered to
+  require a 2.x version of Python.  While it will still work with
+  1.5.2, that is likely to no longer be true in the next version.
+  
+
+* Changes from 1.99.0 to 1.99.1 (pre-2.0):
+
+  This is a pre-release, and should be considered a work in progress.
+
+  - Removed a lingering reference to Pyrite from prc.py.
+
+  - Fixed a bug in plugin importing, which would cause a NameError
+    when a plugin fails to import.
+
+  - Added command line option --DEBUG, which causes more verbose
+    logging during plugin import.  Use this to see tracebacks when a
+    plugin will not import.
+
+  Note: the next version will probably require Python 2.x, or at least
+  have features that will not work without it.
+
+
+* Changes from Doc Toolkit 1.1.3 to Pyrite Publisher 1.99.0 (pre-2.0):
+
+  This is a pre-release, and should be considered a work in progress.
+
+  - Name changed to Pyrite Publisher.
+
+  - The core has been almost totally rewritten.  The prc file access
+    and Doc compression code from Pyrite is now included, and the
+    plugins no longer use the Sulfur API, making this release able to
+    stand completely alone.  Also, the code has been reorganized so
+    that plugins are no longer in their own packages.
+
+  - Plugins are no longer restricted to "input" and "output" types;
+    they stack in arbitrary ways according to what interfaces they
+    support for input and output.  The program will find the
+    highest-priority path through the available plugins that will
+    convert the input (based on MIME type) to some kind of output, and
+    choose that as the default.  (The user can override this to some
+    degree, but cannot cause non-working combinations of plugins to be
+    used.)
+
+  - The RichReader output format is now included.
+
+  - The distributions are now built using the standard Python
+    "distutils" package.
+
+
+
+Local Variables:
+mode: outline
+End:
