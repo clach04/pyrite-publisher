@@ -1,4 +1,37 @@
 
+* Changes from 2.1.0 to 2.1.1:
+
+  This is a bugfix release, to correct a problem with a missing import
+  of 're' in PDB input on Windows.
+
+  There is one change to the plugin API, which will affect third party
+  plugins: the "open" function now takes an additional argument,
+  the protocol which is being used by the current chain.  This change
+  allows plugins to support more than one input protocol at runtime.
+  The argument list for the "open" function is now:
+
+    self, chain, next, protocol, basename
+
+  The documentation has not been updated to reflect this change yet.
+
+* Changes from 2.1.0 to 2.2.0 :
+
+  - Web Spider: The new WebInput plugin retrieves multiple pages from
+    a web site, similar to the zillions of other web-page-conversion
+    utilities that are available.  Since it is still somewhat
+    experimental and incomplete, it is not available from the GUI and
+    you must activate it explicitly by using the --spider command-line
+    option.  (Eventually, it will become the default handler for HTTP
+    URLs and local HTML files.)
+
+    Pages retrieved by the WebInput plugin can currently be processed
+    by the HTML plugin, which will concatenate them into a single
+    document with bookmarks before each new page.
+
+  - [Developers] Plugin open() methods are called with a third
+    argument, the input protocol.  This can be used by plugins that
+    behave differently when multiple protocols are input.
+
 * Changes from 2.0.0 to 2.1.0 :
 
   - Added a "task" system to make user interfaces easier.  A "task" is

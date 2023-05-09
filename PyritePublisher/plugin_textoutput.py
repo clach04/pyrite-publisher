@@ -1,5 +1,5 @@
 #
-#  $Id: plugin_textoutput.py,v 1.4 2002/02/05 12:06:14 rob Exp $
+#  $Id: plugin_textoutput.py,v 1.5 2002/07/15 21:40:28 rob Exp $
 #
 #  Copyright 2001 Rob Tillotson <rob@pyrite.org>
 #  All Rights Reserved
@@ -22,7 +22,7 @@
 """
 """
 
-__version__ = '$Id: plugin_textoutput.py,v 1.4 2002/02/05 12:06:14 rob Exp $'
+__version__ = '$Id: plugin_textoutput.py,v 1.5 2002/07/15 21:40:28 rob Exp $'
 
 __copyright__ = 'Copyright 2001 Rob Tillotson <rob@pyrite.org>'
 
@@ -128,7 +128,7 @@ class Plugin(dtkplugins.OutputPlugin):
                              vtype='STR')
         self.output_filename = ''
         
-    def open(self, chain, next, basename, *a, **kw):
+    def open(self, chain, next, protocol, basename, *a, **kw):
         if self.output_filename: f = open(self.output_filename, 'w')
         else: f = sys.stdout
         

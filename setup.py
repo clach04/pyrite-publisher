@@ -17,7 +17,7 @@ if sys.platform == 'win32':
     
 
 setup(name = "pyrite-publisher",
-      version = "2.1.0",
+      version = "2.1.1",
       description = "Content creation tools for Palm users",
       author = "Rob Tillotson",
       author_email = "rob@pyrite.org",

@@ -1,5 +1,5 @@
 #
-#  $Id: plugin_docoutput.py,v 1.2 2002/03/28 04:55:14 rob Exp $
+#  $Id: plugin_docoutput.py,v 1.3 2002/07/15 21:40:28 rob Exp $
 #
 #  Copyright 2001 Rob Tillotson <rob@pyrite.org>
 #  All Rights Reserved
@@ -22,7 +22,7 @@
 """
 """
 
-__version__ = '$Id: plugin_docoutput.py,v 1.2 2002/03/28 04:55:14 rob Exp $'
+__version__ = '$Id: plugin_docoutput.py,v 1.3 2002/07/15 21:40:28 rob Exp $'
 
 __author__ = 'Rob Tillotson <rob@pyrite.org>'
 
@@ -84,7 +84,7 @@ class Plugin(OutputPlugin):
         self.api.register_task('raw2doc', 'Convert to Doc without reformatting',
                                ['RawText', 'Doc'])
         
-    def open(self, chain, next, basename, *a, **kw):
+    def open(self, chain, next, protocol, basename, *a, **kw):
 	self.doc = DocWriteStream(next,
                                   self.title and self.title or basename,
 				  self.creator, self.type, self.backup and 0x0008 or 0,

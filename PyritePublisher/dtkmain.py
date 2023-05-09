@@ -1,5 +1,5 @@
 #
-#  $Id: dtkmain.py,v 1.12 2002/03/28 04:55:14 rob Exp $
+#  $Id: dtkmain.py,v 1.13 2002/07/15 21:40:28 rob Exp $
 #
 #  Copyright 2001 Rob Tillotson <rob@pyrite.org>
 #  All Rights Reserved
@@ -22,7 +22,7 @@
 """
 """
 
-__version__ = '$Id: dtkmain.py,v 1.12 2002/03/28 04:55:14 rob Exp $'
+__version__ = '$Id: dtkmain.py,v 1.13 2002/07/15 21:40:28 rob Exp $'
 
 __copyright__ = 'Copyright 2001 Rob Tillotson <rob@pyrite.org>'
 
@@ -134,13 +134,14 @@ class Chain:
             for outplug in _outputs[outp]:
                 for inplug,pri in _inputs.get(outp,[]):
                     if inplug != outplug:
-                        _pairs[(outplug,inplug)] = pri
+                        _pairs[(outplug,inplug)] = (pri, outp)
+
         # add terminating nodes
         for outplug in _outputs[None]:
-            _pairs[(outplug,None)] = 0
+            _pairs[(outplug,None)] = (0,None)
         for inp in _inputs.keys():
             for inplug,pri in _inputs[inp]:
-                _pairs[(inp,inplug)] = pri
+                _pairs[(inp,inplug)] = (pri, inp)
 
         # now we have the edges of a directed graph in which the vertices are
         # plugins... now we need to find all paths between the start and end
@@ -151,13 +152,16 @@ class Chain:
             if outp not in _graph[inp]: _graph[inp].append(outp)
 
         paths = find_all_paths(_graph, start, end)
-
+        
         # now figure out priorities and sort them
         ret = []
         for path in paths:
+            _p = path[:]
             pri = -len(path)  # prioritize by length too
             for x in range(len(path)-1):
-                pri += _pairs[(path[x],path[x+1])]
+                p,t = _pairs[(_p[x],_p[x+1])]
+                pri += p
+                if t is not None: path[x+1] = (path[x+1],t)
             ret.append((pri, filter(lambda x: x is not None and type(x) != type(''),
                                     path)))
         ret.sort()
@@ -193,21 +197,21 @@ class Chain:
 	self.__r_links = r_links
 
 
-    def open(self, plugins, *a, **kw):
-	self.path = plugins[:]
-	path = plugins[:]
+    def open(self, path, *a, **kw):
+	self.path = path[:]
+	path = path[:]
 	path.reverse()
 
 	last = None
-	for p in path:
-	    last = apply(p.open, (self, last)+a, kw)
+	for plugin, protocol in path:
+	    last = apply(plugin.open, (self, last, protocol)+a, kw)
 
 	return last
 
     def close(self):
-	for p in self.path:
-	    if hasattr(p, 'close') and callable(p.close):
-		p.close()
+	for plugin, protocol in self.path:
+	    if hasattr(plugin, 'close') and callable(plugin.close):
+		plugin.close()
 	self.path = []
 	    
 
@@ -367,7 +371,8 @@ class PPInstance:
             paths = self.chain.pathfind(mimetype, None)
             # filter out paths which don't contain forced plugins
             for pi in forced_plugins:
-                paths = filter(lambda x,p=pi: p in x[1], paths)
+                paths = [ p for p in paths
+                          if pi in [x for x,y in p[1]] ]
 
             if paths: break
 
@@ -399,12 +404,12 @@ class PPInstance:
             raise ConversionError, "couldn't find a way to convert from %s" % string.join(mt)
 
         # DEBUG
-        print "("+string.join(map(lambda x: x.name, (iplug,)+tuple(path)),',')+")",
+        print "("+string.join(map(lambda x: x.name, (iplug,)+tuple([x[0] for x in path])),',')+")",
         sys.stdout.flush()
         # /DEBUG
 
         head = self.chain.open(path, basename)
-        input = iplug.open(self.chain, head)
+        input = iplug.open(self.chain, head, "INPUT")
 
         input.go(mimetype)
 

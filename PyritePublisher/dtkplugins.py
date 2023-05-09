@@ -1,5 +1,5 @@
 #
-#  $Id: dtkplugins.py,v 1.13 2002/03/28 04:55:14 rob Exp $
+#  $Id: dtkplugins.py,v 1.14 2002/07/15 21:40:28 rob Exp $
 #
 #  Copyright 1999-2001 Rob Tillotson <rob@pyrite.org>
 #  All Rights Reserved
@@ -22,7 +22,7 @@
 """base types of plugins, etc.
 """
 
-__version__ = '$Id: dtkplugins.py,v 1.13 2002/03/28 04:55:14 rob Exp $'
+__version__ = '$Id: dtkplugins.py,v 1.14 2002/07/15 21:40:28 rob Exp $'
 
 __copyright__ = 'Copyright 1999-2001 Rob Tillotson <rob@pyrite.org>'
 
@@ -144,9 +144,10 @@ class DTKPlugin(plugin.PropertyMixin, plugin.CLIOptionMixin):
         l.sort()
         self.links = l
         
-    def open(self, chain, next, *a, **kw):
+    def open(self, chain, next, protocol, *a, **kw):
 	self.chain = chain
 	self.next = next
+        self.protocol = protocol
 	return self
 
     def close(self):

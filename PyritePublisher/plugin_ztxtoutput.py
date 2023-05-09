@@ -1,5 +1,5 @@
 #
-#  $Id: plugin_ztxtoutput.py,v 1.7 2002/03/26 21:34:33 rob Exp $
+#  $Id: plugin_ztxtoutput.py,v 1.8 2002/07/15 21:40:28 rob Exp $
 #
 #  Copyright 2001 Rob Tillotson <rob@pyrite.org>
 #  All Rights Reserved
@@ -22,7 +22,7 @@
 """
 """
 
-__version__ = '$Id: plugin_ztxtoutput.py,v 1.7 2002/03/26 21:34:33 rob Exp $'
+__version__ = '$Id: plugin_ztxtoutput.py,v 1.8 2002/07/15 21:40:28 rob Exp $'
 
 __author__ = 'Rob Tillotson <rob@pyrite.org>'
 
@@ -71,7 +71,7 @@ class Plugin(OutputPlugin):
 
         self.doc = None
 
-    def open(self, chain, next, basename, *a, **kw):
+    def open(self, chain, next, protocol, basename, *a, **kw):
         params = 0
         
         self.doc = ztxt.zTXTWriteStream(next,

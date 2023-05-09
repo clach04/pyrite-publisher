@@ -1,3 +1,34 @@
+2002-07-15  Rob Tillotson  <rob@pyrite.org>
+
+	* Release 2.1.1
+	
+	* PyritePublisher/plugin_pdbinput.py: Add import of 're'.
+
+2002-04-01  Rob Tillotson  <rob@pyrite.org>
+
+	* PyritePublisher/dtkmain.py (Chain.close): Support protocol specs
+	in path.
+	(Chain.open): Same.
+
+	* PyritePublisher/plugin_ztxtoutput.py (Plugin.open): Add protocol
+	argument.
+
+	* PyritePublisher/plugin_textoutput.py (Plugin.open): Add protocol
+	argument.
+
+	* PyritePublisher/plugin_pdboutput.py (Plugin.open): Add protocol
+	argument.
+
+	* PyritePublisher/plugin_docoutput.py (Plugin.open): Add protocol
+	argument.
+
+	* PyritePublisher/dtkplugins.py (DTKPlugin.open): Add third
+	argument for protocol.
+
+	* PyritePublisher/dtkmain.py (Chain.pathfind): Add protocol
+	specifications to path returns.
+	(PPInstance.find_paths): Support protocol specs in paths.
+
 2002-03-27  Rob Tillotson  <rob@pyrite.org>
 
 	* Release 2.1.0

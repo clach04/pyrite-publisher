@@ -1,5 +1,5 @@
 #
-#  $Id: plugin_HTML.py,v 1.9 2002/02/05 12:06:14 rob Exp $
+#  $Id: plugin_HTML.py,v 1.10 2002/07/15 21:40:28 rob Exp $
 #
 #  Copyright 1999-2001 Rob Tillotson <rob@pyrite.org>
 #  All Rights Reserved
@@ -22,11 +22,11 @@
 """
 """
 
-__version__ = '$Id: plugin_HTML.py,v 1.9 2002/02/05 12:06:14 rob Exp $'
+__version__ = '$Id: plugin_HTML.py,v 1.10 2002/07/15 21:40:28 rob Exp $'
 
 __copyright__ = 'Copyright 1999-2001 Rob Tillotson <rob@pyrite.org>'
 
-import formatter, htmllib, string
+import formatter, htmllib, string, urlparse, os
 
 import dtkplugins
 
@@ -36,7 +36,8 @@ class Plugin(dtkplugins.ParserPlugin):
 
     links = [ (0, "text/html", "doc-assembler"),
 	      (-10, "text/plain", "doc-assembler"),
-	      (-10, "application/x-dtk-raw-stream", "doc-assembler") ]
+	      (-10, "application/x-dtk-raw-stream", "doc-assembler"),
+              (0, "MULTIPART:web", "doc-assembler")]
     
     def __init__(self, *a, **kw):
 	apply(dtkplugins.ParserPlugin.__init__, (self,)+a, kw)
@@ -94,6 +95,30 @@ class Plugin(dtkplugins.ParserPlugin):
                 self.fmt.add_flowing_data(self.parser.anchorlist[x])
                 self.fmt.add_line_break()
 
+    def process_multipart_web(self, pages):
+        # for now, this just concatenates the pages together with
+        # a bookmark in between
+        # we already have a formatter etc., but we will be making
+        # a new parser for each one.
+        addsplit = 0
+        for url, mtype, filename, extra in pages:
+            if mtype != 'text/html':
+                print "Skipping", url, "because it isn't html"
+                continue
+            if addsplit:
+                self.fmt.end_paragraph(1)
+                self.fmt.add_hor_rule()
+            print "Writing", url
+            self.next.set_bookmark(os.path.basename(urlparse.urlparse(url)[2])) # get title for this instead?
+            parser = DocHTMLParser(self.fmt)
+            self.copyProperties(parser)
+            data = open(filename).read()
+            parser.feed(string.translate(data, self.ttbl, '\r'))
+            addsplit = 1
+            # handle footnote_links etc.
+            
+        
+        
 
 class DocHTMLParser(htmllib.HTMLParser):
     """A HTML parser with some support for Doc-format e-texts."""

@@ -1,5 +1,5 @@
 Pyrite Publisher (formerly Doc Toolkit)
-Version 2.1.0
+Version 2.1.1
 Content Creation Tools for Palm Computing Platform Users
 
 Copyright 1998-2002 Rob Tillotson <rob@pyrite.org>

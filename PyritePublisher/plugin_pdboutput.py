@@ -1,5 +1,5 @@
 #
-#  $Id: plugin_pdboutput.py,v 1.3 2002/03/26 21:34:33 rob Exp $
+#  $Id: plugin_pdboutput.py,v 1.4 2002/07/15 21:40:28 rob Exp $
 #
 #  Copyright 2001 Rob Tillotson <rob@pyrite.org>
 #  All Rights Reserved
@@ -27,7 +27,7 @@ The value passed to the previous plugin is simply a prc.File
 instance.
 """
 
-__version__ = '$Id: plugin_pdboutput.py,v 1.3 2002/03/26 21:34:33 rob Exp $'
+__version__ = '$Id: plugin_pdboutput.py,v 1.4 2002/07/15 21:40:28 rob Exp $'
 
 __author__ = 'Rob Tillotson <rob@pyrite.org>'
 
@@ -90,12 +90,11 @@ class Plugin(OutputPlugin):
                              'Guarantee unique DB names', boolean=1)
         self.unique_names = 0
         
-    def open(self, chain, next, basename, *a, **kw):
+    def open(self, chain, next, protocol, basename, *a, **kw):
         if self.output_filename: fn = self.output_filename
         else: fn = os.path.join(self.output_dir, basename+'.pdb')
 
         self.filename = fn
-        
         self.pdb = prc.File(fn, read=0, write=1, info={'name': basename})
         
         return self.pdb
@@ -105,7 +104,7 @@ class Plugin(OutputPlugin):
             id = gen_id()
             oldname = self.pdb.getDBInfo().get('name','')
             newname = (oldname + ' '*31)[:31-len(id)]+id
-            self.pdb.updateDBInfo({'name': newname}) 
+            self.pdb.updateDBInfo({'name': newname})
         self.pdb.close()
         self.pdb = None
         if self.install:
